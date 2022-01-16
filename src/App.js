@@ -3,6 +3,7 @@ import { GameContext } from './context'
 import './App.css'
 import Game from './Game'
 import Countdown from './Countdown'
+import Controls from './Controls'
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false)
@@ -24,6 +25,7 @@ function App() {
           <p>you are worfless</p>
         </section>
         <Game />
+        <Controls />
         <Countdown />
       </div>
     </GameContext.Provider>

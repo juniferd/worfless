@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useCallback, useRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useRef,
+} from 'react'
 import { Empty, Tile, TileWrapper } from './components'
 import { GameContext } from './context'
 import {
@@ -7,7 +13,6 @@ import {
   createShuffledBagOfLetters,
   scoreGame,
 } from './helpers'
-import Controls from './Controls'
 
 export default function Game() {
   const [gameTiles, setGameTiles] = useState([])
@@ -18,7 +23,8 @@ export default function Game() {
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
   const { started: gameStarted, stats, setStats } = useContext(GameContext)
-  const textInput = useRef();
+  const textInput = useRef()
+  const [finalScoreText, setFinalScoreText] = useState([])
 
   const grabTiles = useCallback(
     (n = 10, currGameLetters = gameTiles) => {
@@ -34,21 +40,22 @@ export default function Game() {
 
   const getScore = useCallback(() => {
     const { wordCount, points, maxWord } = scoreGame(foundWords)
-    alert(
-      `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
-    )
+    setFinalScoreText([
+      wordCount > 0
+        ? `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
+        : "you didn't guess any words! :(",
+      ...foundWords,
+    ])
   }, [foundWords])
 
   // TODO this seems not great? listens to context and controls game starting/stopping
 
   useEffect(() => {
     if (gameStarted) {
-      console.log('game started')
       grabTiles()
       textInput.current.focus()
     } else {
-      console.log('game ended')
-      if (!stats.firstGame && foundWords.length > 0) getScore()
+      if (!stats.firstGame) getScore()
       resetGame()
       setStats({
         ...stats,
@@ -89,31 +96,43 @@ export default function Game() {
   }
 
   function handleKeyUp(e) {
-    const word = e.target.value.toUpperCase()
+    import('./dictionaryModule')
+      .then(({ checkDictionary }) => {
+        const word = e.target.value.toUpperCase()
 
-    const { valid: validGame, updatedGameTiles } = validateAndGetUpdatedGame(
-      word,
-      [...gameTiles]
-    )
-    setGameTiles(updatedGameTiles)
-    setValid({ ...validGame })
+        const { valid: validGame, updatedGameTiles } =
+          validateAndGetUpdatedGame(word, [...gameTiles])
+        setGameTiles(updatedGameTiles)
+        setValid({ ...validGame })
 
-    if (e.keyCode === 13 && validGame.valid) {
-      if (word.length > 2) {
-        // on enter store the game word and remove tiles
-        const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
-        // TODO maybe don't hardcode this
-        const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
-        grabTiles(n, remainingTiles)
-        setFoundWords([...foundWords, word])
-        setInputValue('')
-      } else {
-        setValid({
-          valid: false,
-          message: 'word needs to be longer than 2 letters',
-        })
-      }
-    }
+        if (e.keyCode === 13 && validGame.valid) {
+          if (word.length <= 2) {
+            setValid({
+              valid: false,
+              message: 'word must be longer than 2 letters',
+            })
+          } else if (!checkDictionary(word)) {
+            setValid({
+              valid: false,
+              message: 'word not found in dictionary',
+            })
+          } else {
+            // on enter store the game word and remove tiles
+            const remainingTiles = updatedGameTiles.filter(
+              ({ found }) => !found
+            )
+            // TODO maybe don't hardcode this
+            const n =
+              remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
+            grabTiles(n, remainingTiles)
+            setFoundWords([...foundWords, word])
+            setInputValue('')
+          }
+        }
+      })
+      .catch((err) => {
+        console.log('error:', err)
+      })
   }
 
   return (
@@ -144,12 +163,14 @@ export default function Game() {
         />
       </section>
       <section>
+        {!gameStarted
+          ? finalScoreText.map((text, i) => <p key={i}>{text}</p>)
+          : ''}
         <p>{foundWords.length > 0 ? 'your words' : ''}</p>
         {foundWords.map((word, i) => (
           <p key={i}>{word}</p>
         ))}
       </section>
-      <Controls />
     </>
   )
 }
