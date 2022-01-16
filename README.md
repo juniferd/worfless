@@ -30,13 +30,13 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 # TODOs
 
-- [ ] check against scrabble dictionary
+- [x] check against scrabble dictionary
 - [ ] swap tiles instead of grabbing 3 and appending
-- [ ] monospace font
+- [x] monospace font
 - [ ] turn tiles into buttons with `aria-pressed` attr
 - [ ] be able to select tiles by clicking
 - [ ] add "shuffle tiles"
 - [ ] add modal component
 - [ ] add about modal
-- [ ] change score alert into modal
+- [ ] change score into modal
 - [ ] update scoring to ignore dupe words

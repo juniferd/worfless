@@ -1,6 +1,7 @@
 .wrapper {
+  font-family: 'Fira Sans', monospace;
   position: absolute;
-  right: 0;
+  right: 1em;
   top: 0;
   font-size: 2rem;
   color: green;
