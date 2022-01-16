@@ -1,47 +1,71 @@
-const POINTS = {
-  A: 1,
-  E: 1,
-  I: 1,
-  O: 1,
-  U: 1,
-  L: 1,
-  N: 1,
-  S: 1,
-  T: 1,
-  R: 1,
-  D: 2,
-  G: 2,
-  B: 3,
-  C: 3,
-  M: 3,
-  P: 3,
-  F: 4,
-  H: 4,
-  V: 4,
-  W: 4,
-  Y: 4,
-  K: 5,
-  J: 8,
-  X: 8,
-  Q: 10,
-  Z: 10,
+// const POINTS = {
+//   A: 1,
+//   E: 1,
+//   I: 1,
+//   O: 1,
+//   U: 1,
+//   L: 1,
+//   N: 1,
+//   S: 1,
+//   T: 1,
+//   R: 1,
+//   D: 2,
+//   G: 2,
+//   B: 3,
+//   C: 3,
+//   M: 3,
+//   P: 3,
+//   F: 4,
+//   H: 4,
+//   V: 4,
+//   W: 4,
+//   Y: 4,
+//   K: 5,
+//   J: 8,
+//   X: 8,
+//   Q: 10,
+//   Z: 10,
+// }
+
+// function scoreScrabblePoints(words) {
+//   let points = 0;
+//   let maxWord = '';
+//   words.forEach(word => {
+//     if (word.length > maxWord.length) {
+//       maxWord = word;
+//     }
+//     word.split('').forEach(letter => points += POINTS[letter])
+//   });
+//   return {points, maxWord};
+// }
+
+const BOGGLE_POINTS = {
+  0: 0,
+  1: 0,
+  2: 0,
+  3: 1,
+  4: 1,
+  5: 2,
+  6: 3,
+  7: 5,
 }
 
-function scoreScrabblePoints(words) {
+function scoreBogglePoints(words) {
   let points = 0;
   let maxWord = '';
   words.forEach(word => {
     if (word.length > maxWord.length) {
       maxWord = word;
     }
-    word.split('').forEach(letter => points += POINTS[letter])
-  });
+    points += word.length >= 8 ? 11 : BOGGLE_POINTS[word.length]
+  })
+
   return {points, maxWord};
 }
 
 export default function scoreGame(words) {
   const wordCount = words.length;
-  const {points: scrabblePoints, maxWord} = scoreScrabblePoints(words);
+  const {points, maxWord} = scoreBogglePoints(words);
 
-  return {wordCount, scrabblePoints, maxWord};
+  return {wordCount, points, maxWord};
 }

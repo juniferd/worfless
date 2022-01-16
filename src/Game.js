@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Tile, TileWrapper } from './components'
+import React, { useState } from 'react'
+import { Empty, Tile, TileWrapper } from './components'
+import { GameContext } from './context'
 import {
   findDeletedLetter,
   validateAndGetUpdatedGame,
   createShuffledBagOfLetters,
   scoreGame,
 } from './helpers'
+import Controls from './Controls'
 
 export default function Game() {
   const [gameTiles, setGameTiles] = useState([])
@@ -16,17 +18,13 @@ export default function Game() {
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState(true)
 
-  useEffect(() => {
-    // init
-    grabTiles()
-    // TODO uhhh fix this cleanup
-    return () => {
-      setTimeout(() => {
-        setGameTiles([])
-        setLetters(createShuffledBagOfLetters())
-      }, 0)
-    }
-  }, [])
+  function resetGame() {
+    setCounter(0)
+    setGameTiles([])
+    setLetters(createShuffledBagOfLetters())
+    setInputValue('')
+    setFoundWords([])
+  }
 
   function grabTiles(n = 10, currGameLetters = gameTiles) {
     const nextTiles = letters
@@ -79,41 +77,55 @@ export default function Game() {
   }
 
   function getScore() {
-    const { wordCount, scrabblePoints, maxWord } = scoreGame(foundWords)
+    const { wordCount, points, maxWord } = scoreGame(foundWords)
     alert(
-      `you got ${wordCount} words for a total of ${scrabblePoints}. your longest word was ${maxWord}`
+      `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
     )
   }
 
   return (
-    <div className="App">
+    <>
       <section>
-        <p>you are worfless</p>
-      </section>
-      <section>
-        <TileWrapper>
-          {gameTiles.map(({ id, letter, found }) => (
-            <Tile key={id} found={found} id={id} letter={letter} />
-          ))}
-        </TileWrapper>
-        <button onClick={() => grabTiles(3)}>get more</button>
+        <GameContext.Consumer>
+          {({ gameStarted }) => (
+            <>
+              {gameStarted ? (
+                <>
+                  <TileWrapper>
+                    {gameTiles.map(({ id, letter, found }) => (
+                      <Tile key={id} found={found} id={id} letter={letter} />
+                    ))}
+                  </TileWrapper>
+                  <button onClick={() => grabTiles(3)}>get more</button>
+                </>
+              ) : (
+                <Empty />
+              )}
+            </>
+          )}
+        </GameContext.Consumer>
       </section>
       <section>
         {!valid && <p>that tile is not available!</p>}
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleOnChange}
-          onKeyUp={handleKeyUp}
-        />
+        <GameContext.Consumer>
+          {({ gameStarted }) => (
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleOnChange}
+              onKeyUp={handleKeyUp}
+              disabled={!gameStarted}
+            />
+          )}
+        </GameContext.Consumer>
       </section>
       <section>
-        <p>your words</p>
+        <p>{foundWords.length > 0 ? 'your words' : ''}</p>
         {foundWords.map((word, i) => (
           <p key={i}>{word}</p>
         ))}
-        <button onClick={getScore}>score this nonsense</button>
       </section>
-    </div>
+      <Controls grabTiles={grabTiles} getScore={getScore} resetGame={resetGame} />
+    </>
   )
 }
