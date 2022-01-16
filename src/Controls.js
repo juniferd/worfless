@@ -15,7 +15,7 @@ export default function Controls() {
           return (
             <>
               <button onClick={updateGameStats}>
-                {gameState.gameStarted ? 'end' : 'start'} game
+                {gameState.started ? 'end' : 'start'} game
               </button>
             </>
           )
