@@ -1,5 +1,9 @@
 A basic [anagrams game](https://en.wikipedia.org/wiki/Anagrams_(game)) with tiles
 
+why is it called worfless? it was a typo that i found funny
+
+![gif of worf facepalming](https://media.giphy.com/media/10p704gIAGRN7i/giphy.gif)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -23,3 +27,16 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+# TODOs
+
+- [ ] check against scrabble dictionary
+- [ ] swap tiles instead of grabbing 3 and appending
+- [ ] monospace font
+- [ ] turn tiles into buttons with `aria-pressed` attr
+- [ ] be able to select tiles by clicking
+- [ ] add "shuffle tiles"
+- [ ] add modal component
+- [ ] add about modal
+- [ ] change score alert into modal
+- [ ] update scoring to ignore dupe words
