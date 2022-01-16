@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { Empty, Tile, TileWrapper } from './components'
 import { GameContext } from './context'
 import {
@@ -17,6 +17,44 @@ export default function Game() {
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
+  const { gameStarted, stats, setStats } = useContext(GameContext)
+
+  const grabTiles = useCallback(
+    (n = 10, currGameLetters = gameTiles) => {
+      const nextTiles = letters
+        .slice(0, n)
+        .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
+      setGameTiles([...currGameLetters, ...nextTiles])
+      setLetters(letters.slice(n))
+      setCounter(counter + n)
+    },
+    [counter, gameTiles, letters]
+  )
+
+  const getScore = useCallback(() => {
+    const { wordCount, points, maxWord } = scoreGame(foundWords)
+    alert(
+      `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
+    )
+  }, [foundWords])
+
+  useEffect(() => {
+    if (gameStarted) {
+      console.log('game started')
+      grabTiles()
+    } else {
+      console.log('game ended')
+      if (!stats.firstGame) getScore()
+      resetGame()
+      setStats({
+        ...stats,
+        firstGame: false,
+        count: stats.count === undefined ? 0 : stats.count + 1,
+      })
+    }
+  // TODO look into this pls
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameStarted])
 
   function resetGame() {
     setCounter(0)
@@ -24,15 +62,6 @@ export default function Game() {
     setLetters(createShuffledBagOfLetters())
     setInputValue('')
     setFoundWords([])
-  }
-
-  function grabTiles(n = 10, currGameLetters = gameTiles) {
-    const nextTiles = letters
-      .slice(0, n)
-      .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
-    setGameTiles([...currGameLetters, ...nextTiles])
-    setLetters(letters.slice(n))
-    setCounter(counter + n)
   }
 
   function handleOnChange(e) {
@@ -62,9 +91,8 @@ export default function Game() {
       word,
       [...gameTiles]
     )
-    console.log(validGame)
     setGameTiles(updatedGameTiles)
-    setValid({...validGame})
+    setValid({ ...validGame })
 
     if (e.keyCode === 13 && validGame.valid) {
       if (word.length > 2) {
@@ -76,16 +104,12 @@ export default function Game() {
         setFoundWords([...foundWords, word])
         setInputValue('')
       } else {
-        setValid({valid: false, message: 'word needs to be longer than 2 letters'})
+        setValid({
+          valid: false,
+          message: 'word needs to be longer than 2 letters',
+        })
       }
     }
-  }
-
-  function getScore() {
-    const { wordCount, points, maxWord } = scoreGame(foundWords)
-    alert(
-      `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
-    )
   }
 
   return (
@@ -130,7 +154,7 @@ export default function Game() {
           <p key={i}>{word}</p>
         ))}
       </section>
-      <Controls grabTiles={grabTiles} getScore={getScore} resetGame={resetGame} />
+      <Controls />
     </>
   )
 }
