@@ -6,7 +6,7 @@ export default function Controls() {
       <GameContext.Consumer>
         {(gameState) => {
           function updateGameStats() {
-            if (!gameState.gameStarted) {
+            if (!gameState.started) {
               gameState.startGame()
             } else {
               gameState.endGame()

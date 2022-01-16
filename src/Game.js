@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react'
+import React, { useState, useEffect, useContext, useCallback, useRef } from 'react'
 import { Empty, Tile, TileWrapper } from './components'
 import { GameContext } from './context'
 import {
@@ -17,7 +17,8 @@ export default function Game() {
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
-  const { gameStarted, stats, setStats } = useContext(GameContext)
+  const { started: gameStarted, stats, setStats } = useContext(GameContext)
+  const textInput = useRef();
 
   const grabTiles = useCallback(
     (n = 10, currGameLetters = gameTiles) => {
@@ -38,13 +39,16 @@ export default function Game() {
     )
   }, [foundWords])
 
+  // TODO this seems not great? listens to context and controls game starting/stopping
+
   useEffect(() => {
     if (gameStarted) {
       console.log('game started')
       grabTiles()
+      textInput.current.focus()
     } else {
       console.log('game ended')
-      if (!stats.firstGame) getScore()
+      if (!stats.firstGame && foundWords.length > 0) getScore()
       resetGame()
       setStats({
         ...stats,
@@ -52,8 +56,8 @@ export default function Game() {
         count: stats.count === undefined ? 0 : stats.count + 1,
       })
     }
-  // TODO look into this pls
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // TODO look into this pls
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStarted])
 
   function resetGame() {
@@ -115,38 +119,29 @@ export default function Game() {
   return (
     <>
       <section>
-        <GameContext.Consumer>
-          {({ gameStarted }) => (
-            <>
-              {gameStarted ? (
-                <>
-                  <TileWrapper>
-                    {gameTiles.map(({ id, letter, found }) => (
-                      <Tile key={id} found={found} id={id} letter={letter} />
-                    ))}
-                  </TileWrapper>
-                  <button onClick={() => grabTiles(3)}>get more</button>
-                </>
-              ) : (
-                <Empty />
-              )}
-            </>
-          )}
-        </GameContext.Consumer>
+        {gameStarted ? (
+          <>
+            <TileWrapper>
+              {gameTiles.map(({ id, letter, found }) => (
+                <Tile key={id} found={found} id={id} letter={letter} />
+              ))}
+            </TileWrapper>
+            <button onClick={() => grabTiles(3)}>get more</button>
+          </>
+        ) : (
+          <Empty />
+        )}
       </section>
       <section>
         {!valid.valid && <p>{valid.message}</p>}
-        <GameContext.Consumer>
-          {({ gameStarted }) => (
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleOnChange}
-              onKeyUp={handleKeyUp}
-              disabled={!gameStarted}
-            />
-          )}
-        </GameContext.Consumer>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleOnChange}
+          onKeyUp={handleKeyUp}
+          disabled={!gameStarted}
+          ref={textInput}
+        />
       </section>
       <section>
         <p>{foundWords.length > 0 ? 'your words' : ''}</p>

@@ -21,11 +21,11 @@ export default function Countdown() {
 
   useEffect(() => {
     let id
-    if (gameContext.gameStarted) {
+    if (gameContext.started) {
       id = startClock()
     }
     return () => clearInterval(id)
-  }, [gameContext.gameStarted, startClock])
+  }, [gameContext.started, startClock])
 
   useEffect(() => {
     if (time === 0) {
@@ -34,8 +34,8 @@ export default function Countdown() {
   }, [time, resetClock])
 
   useEffect(() => {
-    if (!gameContext.gameStarted && time < 60) setTime(60)
-  }, [gameContext.gameStarted, time])
+    if (!gameContext.started && time < 60) setTime(60)
+  }, [gameContext.started, time])
 
   return (
     <div className={styles.wrapper}>

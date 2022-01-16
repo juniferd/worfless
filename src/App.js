@@ -17,7 +17,7 @@ function App() {
 
   return (
     <GameContext.Provider
-      value={{ gameStarted, startGame, endGame, stats, setStats }}
+      value={{ started: gameStarted, startGame, endGame, stats, setStats }}
     >
       <div className="App">
         <section>
