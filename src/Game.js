@@ -16,7 +16,7 @@ export default function Game() {
   const [counter, setCounter] = useState(0)
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
-  const [valid, setValid] = useState(true)
+  const [valid, setValid] = useState({})
 
   function resetGame() {
     setCounter(0)
@@ -62,17 +62,22 @@ export default function Game() {
       word,
       [...gameTiles]
     )
+    console.log(validGame)
     setGameTiles(updatedGameTiles)
-    setValid(validGame)
+    setValid({...validGame})
 
-    if (e.keyCode === 13 && validGame) {
-      // on enter store the game word and remove tiles
-      const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
-      // TODO maybe don't hardcode this
-      const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
-      grabTiles(n, remainingTiles)
-      setFoundWords([...foundWords, word])
-      setInputValue('')
+    if (e.keyCode === 13 && validGame.valid) {
+      if (word.length > 2) {
+        // on enter store the game word and remove tiles
+        const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
+        // TODO maybe don't hardcode this
+        const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
+        grabTiles(n, remainingTiles)
+        setFoundWords([...foundWords, word])
+        setInputValue('')
+      } else {
+        setValid({valid: false, message: 'word needs to be longer than 2 letters'})
+      }
     }
   }
 
@@ -106,7 +111,7 @@ export default function Game() {
         </GameContext.Consumer>
       </section>
       <section>
-        {!valid && <p>that tile is not available!</p>}
+        {!valid.valid && <p>{valid.message}</p>}
         <GameContext.Consumer>
           {({ gameStarted }) => (
             <input

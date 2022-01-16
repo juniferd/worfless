@@ -15,7 +15,6 @@ export function findDeletedLetter(one, two) {
 export function validateAndGetUpdatedGame(word, gameTiles) {
   // TODO should find a better way than re-writing these found keys all the time
   const updatedGameTiles = [...gameTiles].map(p => ({...p, found: false}));
-  let valid = true;
 
   for (let i = 0; i < word.length; i++) {
     const currLetter = word[i];
@@ -25,9 +24,9 @@ export function validateAndGetUpdatedGame(word, gameTiles) {
     if (index > -1) {
       updatedGameTiles[index].found = true;
     } else {
-      return {valid: false, updatedGameTiles};
+      return {valid: {valid: false, message: 'that tile is not available'}, updatedGameTiles};
     }
   }
 
-  return {valid, updatedGameTiles};
+  return {valid: {valid: true, message: ''}, updatedGameTiles};
 }
