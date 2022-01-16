@@ -12,22 +12,22 @@ export function findDeletedLetter(one, two) {
   return undefined;
 }
 
-export function validateAndGetUpdatedGame(word, gameLetters) {
+export function validateAndGetUpdatedGame(word, gameTiles) {
   // TODO should find a better way than re-writing these found keys all the time
-  const updatedGameLetters = [...gameLetters].map(p => ({...p, found: false}));
+  const updatedGameTiles = [...gameTiles].map(p => ({...p, found: false}));
   let valid = true;
 
   for (let i = 0; i < word.length; i++) {
     const currLetter = word[i];
-    const index = updatedGameLetters.findIndex(({letter, found}) => {
+    const index = updatedGameTiles.findIndex(({letter, found}) => {
       return letter === currLetter & !found;
     });
     if (index > -1) {
-      updatedGameLetters[index].found = true;
+      updatedGameTiles[index].found = true;
     } else {
-      return {valid: false, updatedGameLetters};
+      return {valid: false, updatedGameTiles};
     }
   }
 
-  return {valid, updatedGameLetters};
+  return {valid, updatedGameTiles};
 }

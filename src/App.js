@@ -3,10 +3,12 @@ import Tile, {TileWrapper} from './Tile'
 import './App.css'
 import bag from './letters'
 import { findDeletedLetter, validateAndGetUpdatedGame } from './utils'
+import scoreGame from './score';
 
 function App() {
   const [gameTiles, setGameTiles] = useState([])
   const [letters, setLetters] = useState(bag())
+  // TODO revisit this later
   const [counter, setCounter] = useState(0)
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
@@ -14,7 +16,7 @@ function App() {
 
   useEffect(() => {
     // init
-    grabLetters()
+    grabTiles()
     // TODO uhhh fix this cleanup
     return () => {
       setTimeout(() => {
@@ -24,11 +26,11 @@ function App() {
     }
   }, [])
 
-  function grabLetters(n = 10, currGameLetters = gameTiles) {
-    const nextLetters = letters
+  function grabTiles(n = 10, currGameLetters = gameTiles) {
+    const nextTiles = letters
       .slice(0, n)
       .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
-    setGameTiles([...currGameLetters, ...nextLetters])
+    setGameTiles([...currGameLetters, ...nextTiles])
     setLetters(letters.slice(n))
     setCounter(counter + n)
   }
@@ -40,14 +42,15 @@ function App() {
         e.target.value.toUpperCase(),
         inputValue.toUpperCase()
       )
-      const updatedGameLetters = [...gameTiles]
-      const index = updatedGameLetters.findIndex(({ letter, found }) => {
+      const updatedGameTiles = [...gameTiles]
+      const index = updatedGameTiles.findIndex(({ letter, found }) => {
         return letter === deletedLetter && !!found
       })
-      if (updatedGameLetters[index]) {
-        updatedGameLetters[index]['found'] = false
+      // TODO why
+      if (updatedGameTiles[index]) {
+        updatedGameTiles[index]['found'] = false
       }
-      setGameTiles(updatedGameLetters)
+      setGameTiles(updatedGameTiles)
     }
     setInputValue(e.target.value)
   }
@@ -55,21 +58,27 @@ function App() {
   function handleKeyUp(e) {
     const word = e.target.value.toUpperCase()
 
-    const { valid: validGame, updatedGameLetters } = validateAndGetUpdatedGame(
+    const { valid: validGame, updatedGameTiles } = validateAndGetUpdatedGame(
       word,
       [...gameTiles]
     )
-    setGameTiles(updatedGameLetters)
+    setGameTiles(updatedGameTiles)
     setValid(validGame)
 
     if (e.keyCode === 13 && validGame) {
       // on enter store the game word and remove tiles
-      const remainingTiles = updatedGameLetters.filter(({ found }) => !found)
-      const n = remainingTiles.length >= 10 ? 0 : gameTiles.length - remainingTiles.length
-      grabLetters(n, remainingTiles)
+      const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
+      // TODO maybe don't hardcode this
+      const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
+      grabTiles(n, remainingTiles)
       setFoundWords([...foundWords, word])
       setInputValue('')
     }
+  }
+
+  function getScore() {
+    const {wordCount, scrabblePoints, maxWord} = scoreGame(foundWords);
+    alert(`you got ${wordCount} words for a total of ${scrabblePoints}. your longest word was ${maxWord}`)
   }
 
   return (
@@ -83,7 +92,7 @@ function App() {
             <Tile key={id} found={found} id={id} letter={letter} />
           ))}
         </TileWrapper>
-        <button onClick={() => grabLetters(9)}>get more</button>
+        <button onClick={() => grabTiles(3)}>get more</button>
       </section>
       <section>
         {!valid && <p>that tile is not available!</p>}
@@ -99,6 +108,7 @@ function App() {
         {foundWords.map((word, i) => (
           <p key={i}>{word}</p>
         ))}
+        <button onClick={getScore}>score this nonsense</button>
       </section>
     </div>
   )

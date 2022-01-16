@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './Tile.module.css'
 
@@ -9,8 +10,9 @@ export function TileWrapper({children}) {
   )  
 }
 
+// FIXME
 TileWrapper.propTypes = {
-  children: React.propTypes.any,
+  children: PropTypes.any,
 }
 
 function Tile({ id, letter, found }) {
@@ -21,10 +23,11 @@ function Tile({ id, letter, found }) {
   )
 }
 
+// FIXME
 Tile.propTypes = {
-  id: React.propTypes.string,
-  letter: React.propTypes.string,
-  found: React.propTypes.bool,
+  id: PropTypes.string,
+  letter: PropTypes.string,
+  found: PropTypes.bool,
 }
 
 export default Tile
