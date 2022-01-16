@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Tile, {TileWrapper} from './Tile'
 import './App.css'
 import bag from './letters'
