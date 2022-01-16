@@ -25,6 +25,7 @@ export default function Game() {
   const { started: gameStarted, stats, setStats } = useContext(GameContext)
   const textInput = useRef()
   const [finalScoreText, setFinalScoreText] = useState([])
+  const [dictionary, setDictionary] = useState({})
 
   const grabTiles = useCallback(
     (n = 10, currGameLetters = gameTiles) => {
@@ -47,6 +48,23 @@ export default function Game() {
       ...foundWords,
     ])
   }, [foundWords])
+
+  useEffect(() => {
+    setTimeout(() => {
+      import('./dictionaryModule')
+        .then(({ createDictionary }) => {
+          if (JSON.stringify(dictionary) === '{}') {
+            console.log('start create dict')
+            const dict = createDictionary()
+            console.log('end dict')
+            setDictionary(dict)
+          }
+        })
+        .catch((err) => {
+          console.log('error:', err)
+        })
+    }, 0)
+  }, [dictionary])
 
   // TODO this seems not great? listens to context and controls game starting/stopping
 
@@ -95,44 +113,41 @@ export default function Game() {
     setInputValue(e.target.value)
   }
 
+  function checkDictionary(word) {
+    return word in dictionary
+  }
+
   function handleKeyUp(e) {
-    import('./dictionaryModule')
-      .then(({ checkDictionary }) => {
-        const word = e.target.value.toUpperCase()
+    const word = e.target.value.toUpperCase()
 
-        const { valid: validGame, updatedGameTiles } =
-          validateAndGetUpdatedGame(word, [...gameTiles])
-        setGameTiles(updatedGameTiles)
-        setValid({ ...validGame })
+    const { valid: validGame, updatedGameTiles } = validateAndGetUpdatedGame(
+      word,
+      [...gameTiles]
+    )
+    setGameTiles(updatedGameTiles)
+    setValid({ ...validGame })
 
-        if (e.keyCode === 13 && validGame.valid) {
-          if (word.length <= 2) {
-            setValid({
-              valid: false,
-              message: 'word must be longer than 2 letters',
-            })
-          } else if (!checkDictionary(word)) {
-            setValid({
-              valid: false,
-              message: 'word not found in dictionary',
-            })
-          } else {
-            // on enter store the game word and remove tiles
-            const remainingTiles = updatedGameTiles.filter(
-              ({ found }) => !found
-            )
-            // TODO maybe don't hardcode this
-            const n =
-              remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
-            grabTiles(n, remainingTiles)
-            setFoundWords([...foundWords, word])
-            setInputValue('')
-          }
-        }
-      })
-      .catch((err) => {
-        console.log('error:', err)
-      })
+    if (e.keyCode === 13 && validGame.valid) {
+      if (word.length <= 2) {
+        setValid({
+          valid: false,
+          message: 'word must be longer than 2 letters',
+        })
+      } else if (!checkDictionary(word)) {
+        setValid({
+          valid: false,
+          message: 'word not found in dictionary',
+        })
+      } else {
+        // on enter store the game word and remove tiles
+        const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
+        // TODO maybe don't hardcode this
+        const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
+        grabTiles(n, remainingTiles)
+        setFoundWords([...foundWords, word])
+        setInputValue('')
+      }
+    }
   }
 
   return (
