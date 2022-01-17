@@ -115,6 +115,10 @@ export default function Game() {
     return word in dictionary
   }
 
+  function checkIfWordAlreadyUsed(word) {
+    return foundWords.includes(word)
+  }
+
   function handleKeyUp(e) {
     const word = e.target.value.toUpperCase()
 
@@ -130,6 +134,11 @@ export default function Game() {
         setValid({
           valid: false,
           message: 'word must be longer than 2 letters',
+        })
+      } else if(checkIfWordAlreadyUsed(word)) {
+        setValid({
+          valid: false,
+          message: 'you already used that word',
         })
       } else if (!checkDictionary(word)) {
         setValid({
