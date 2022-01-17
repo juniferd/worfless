@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import {FontAwesomeIcon as FA} from '@fortawesome/react-fontawesome'
+import {faCoffee} from '@fortawesome/free-solid-svg-icons'
 import { GameContext } from './context'
 import './App.css'
 import Game from './Game'
@@ -22,7 +24,7 @@ function App() {
     >
       <div className="App">
         <section>
-          <p>you are worfless</p>
+          <p>you are worfless <FA icon={faCoffee} /></p>
         </section>
         <Game />
         <Controls />
