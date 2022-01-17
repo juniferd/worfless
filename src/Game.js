@@ -51,12 +51,10 @@ export default function Game() {
 
   useEffect(() => {
     setTimeout(() => {
-      import('./dictionaryModule')
+      import('./modules/dictionary')
         .then(({ createDictionary }) => {
           if (JSON.stringify(dictionary) === '{}') {
-            console.log('start create dict')
             const dict = createDictionary()
-            console.log('end dict')
             setDictionary(dict)
           }
         })
@@ -70,6 +68,7 @@ export default function Game() {
 
   useEffect(() => {
     if (gameStarted) {
+      if (stats.firstGame) setStats({...stats, firstGame: false })
       grabTiles()
       textInput.current.focus()
     } else {
@@ -77,7 +76,6 @@ export default function Game() {
       resetGame()
       setStats({
         ...stats,
-        firstGame: false,
         count: stats.count === undefined ? 0 : stats.count + 1,
       })
     }
@@ -150,6 +148,11 @@ export default function Game() {
     }
   }
 
+  function handleGetMore() {
+    grabTiles(3);
+    textInput.current.focus();
+  }
+
   return (
     <>
       <section>
@@ -160,7 +163,7 @@ export default function Game() {
                 <Tile key={id} found={found} id={id} letter={letter} />
               ))}
             </TileWrapper>
-            <button onClick={() => grabTiles(3)}>get more</button>
+            <button onClick={handleGetMore} style={{background: '#333'}}>get more</button>
           </>
         ) : (
           <Empty />

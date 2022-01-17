@@ -40,3 +40,16 @@
 section {
   padding: 10px;
 }
+
+button {
+  border: none;
+  background: #1ac0c6;
+  color: #fff;
+  cursor: pointer;
+  padding: .5em;
+  margin: .1em;
+}
+
+main {
+  padding-bottom: 1em;
+}

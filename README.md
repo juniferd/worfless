@@ -36,7 +36,10 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] turn tiles into buttons with `aria-pressed` attr
 - [ ] be able to select tiles by clicking
 - [ ] add "shuffle tiles"
-- [ ] add modal component
-- [ ] add about modal
-- [ ] change score into modal
+- [x] add modal component
+- [x] add about modal
+- [ ] put score in modal
 - [ ] update scoring to ignore dupe words
+- [ ] add button component
+- [ ] add more stats in GameContext (e.g., number of games played, score histogram, most recent best word)
+- [ ] add stats to localStorage
