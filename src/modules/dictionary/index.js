@@ -13,7 +13,3 @@ export function createDictionary() {
   })
   return dict
 }
-
-export function checkDictionary(word, dict) {
-  return word in dict
-}

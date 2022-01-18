@@ -26,13 +26,14 @@ export default function Game() {
   const textInput = useRef()
   const [finalScoreText, setFinalScoreText] = useState([])
   const [dictionary, setDictionary] = useState({})
+  const [swapMode, setSwapMode] = useState(false)
 
   const grabTiles = useCallback(
-    (n = 10, currGameLetters = gameTiles) => {
+    (n = 10, currTiles = gameTiles) => {
       const nextTiles = letters
         .slice(0, n)
         .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
-      setGameTiles([...currGameLetters, ...nextTiles])
+      setGameTiles([...currTiles, ...nextTiles])
       setLetters(letters.slice(n))
       setCounter(counter + n)
     },
@@ -68,7 +69,7 @@ export default function Game() {
 
   useEffect(() => {
     if (gameStarted) {
-      if (stats.firstGame) setStats({...stats, firstGame: false })
+      if (stats.firstGame) setStats({ ...stats, firstGame: false })
       grabTiles()
       textInput.current.focus()
     } else {
@@ -135,7 +136,7 @@ export default function Game() {
           valid: false,
           message: 'word must be longer than 2 letters',
         })
-      } else if(checkIfWordAlreadyUsed(word)) {
+      } else if (checkIfWordAlreadyUsed(word)) {
         setValid({
           valid: false,
           message: 'you already used that word',
@@ -157,9 +158,40 @@ export default function Game() {
     }
   }
 
-  function handleGetMore() {
-    grabTiles(3);
-    textInput.current.focus();
+  function handleStartSwap() {
+    // clear any found tiles
+    const updatedTiles = [...gameTiles].map(t => ({ ...t, found: false }))
+    setInputValue('')
+    setGameTiles(updatedTiles)
+    setSwapMode(true)
+  }
+
+  function handleCancelSwap() {
+    // clear any pressed
+    const updatedTiles = [...gameTiles].map(t => ({...t, pressed: false}))
+
+    setGameTiles(updatedTiles)
+    setSwapMode(false)
+  }
+
+  function selectTile(id) {
+    const updatedTiles = [...gameTiles]
+    if (swapMode) {
+      const tile = updatedTiles.find((tile) => tile.id === id)
+      tile.pressed = !tile.pressed;
+      const numPressed = updatedTiles.reduce((acc, t) => {
+        return t.pressed ? acc + 1 : acc
+      }, 0)
+      if (numPressed === 3) {
+        // remove pressed tiles, exit swap mode, grab 3 tiles
+        grabTiles(3, updatedTiles.filter(t => !t.pressed))
+        setSwapMode(false)
+        textInput.current.focus();
+      } else {
+        setGameTiles(updatedTiles)
+      }
+    }
+    // TODO selecting tiles by clicking
   }
 
   return (
@@ -168,11 +200,27 @@ export default function Game() {
         {gameStarted ? (
           <>
             <TileWrapper>
-              {gameTiles.map(({ id, letter, found }) => (
-                <Tile key={id} found={found} id={id} letter={letter} />
+              {gameTiles.map(({ id, letter, found, pressed}) => (
+                <Tile
+                  key={id}
+                  found={found}
+                  id={id}
+                  letter={letter}
+                  pressed={pressed}
+                  onClick={() => selectTile(id)}
+                  disabled={!swapMode}
+                />
               ))}
             </TileWrapper>
-            <button onClick={handleGetMore} style={{background: '#333'}}>get more</button>
+            {swapMode ? (
+              <button onClick={handleCancelSwap} style={{ background: '#333' }}>
+                cancel swap
+              </button>
+            ) : (
+              <button onClick={handleStartSwap} style={{ background: '#333' }}>
+                swap 3 tiles
+              </button>
+            )}
           </>
         ) : (
           <Empty />

@@ -1,13 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 import styles from './Tile.module.css'
 
-export function TileWrapper({children}) {
-  return (
-    <div className={styles.wrapper}>
-      {children}
-    </div>
-  )  
+export function TileWrapper({ children }) {
+  return <div className={styles.wrapper}>{children}</div>
 }
 
 // FIXME
@@ -15,11 +11,17 @@ TileWrapper.propTypes = {
   children: PropTypes.any,
 }
 
-function Tile({ id, letter, found }) {
+function Tile({ id, letter, found, onClick, pressed, disabled }) {
   return (
-    <span className={[found ? styles.found : '', styles.tile].join(' ')} id={id}>
+    <button
+      className={[found ? styles.found : '', styles.tile].join(' ')}
+      id={id}
+      onClick={onClick}
+      aria-pressed={pressed ? 'true' : 'false'}
+      disabled={disabled}
+    >
       {letter}
-    </span>
+    </button>
   )
 }
 
@@ -28,6 +30,9 @@ Tile.propTypes = {
   id: PropTypes.string,
   letter: PropTypes.string,
   found: PropTypes.bool,
+  onClick: PropTypes.func,
+  pressed: PropTypes.bool,
+  disabled: PropTypes.bool,
 }
 
 export default Tile
