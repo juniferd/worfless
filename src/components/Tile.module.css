@@ -1,17 +1,27 @@
 .tile {
   font-family: 'Fira Mono', monospace;
+  background: #2fdde4;
   color: #333;
-  border: 1px solid #ccc;
+  border: 1px solid transparent;
   padding: 10px;
   margin: 3px;
   position: relative;
 }
-.tile[aria-pressed="true"] {
+
+.tile[aria-pressed='true'] {
   background: #ccc;
 }
+.tile[aria-pressed='true']::after {
+  content: 'x';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .tile[disabled] {
   cursor: default;
   background: #fff;
+  border: 1px solid #ccc;
 }
 
 .found::before {

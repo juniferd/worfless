@@ -85,6 +85,7 @@ export default function Game() {
   }, [gameStarted])
 
   function resetGame() {
+    setSwapMode(false)
     setCounter(0)
     setGameTiles([])
     setLetters(createShuffledBagOfLetters())
@@ -169,9 +170,9 @@ export default function Game() {
   function handleCancelSwap() {
     // clear any pressed
     const updatedTiles = [...gameTiles].map(t => ({...t, pressed: false}))
-
     setGameTiles(updatedTiles)
     setSwapMode(false)
+    textInput.current.focus();
   }
 
   function selectTile(id) {
