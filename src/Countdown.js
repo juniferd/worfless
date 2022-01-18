@@ -38,8 +38,8 @@ export default function Countdown() {
   }, [gameContext.started, time])
 
   return (
-    <div className={styles.wrapper}>
-      <p>{time}</p>
+    <div className={[styles.wrapper, gameContext.started ? styles.visible : '', time < 11 ? styles.warning : ''].join(' ')}>
+      <span>{time}</span>
     </div>
   )
 }

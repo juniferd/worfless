@@ -1,8 +1,22 @@
 .wrapper {
   font-family: 'Fira Sans', monospace;
   position: absolute;
-  right: 1em;
+  left: 50%;
   top: 0;
-  font-size: 2rem;
-  color: green;
+  font-size: 1.5rem;
+  color: #12de93;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25em;
+  display: none;
+  min-width: 100px;
+  transition: all 0.2s;
+}
+
+.visible {
+  display: block;
+}
+
+.warning {
+  color: #c72924;
 }

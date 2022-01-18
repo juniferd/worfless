@@ -6,11 +6,11 @@ export function About({ onClose }) {
   return (
     <Modal onClose={onClose}>
       <Modal.Header onClose={onClose}>
-        <span>about</span>
+        <span>about worfless</span>
       </Modal.Header>
       <Modal.Content>
         <h4>what is this?</h4>
-        <p>worfless is a basic <a href="https://en.wikipedia.org/wiki/Anagrams_(game)">anagrams-like game</a> simulating using a bag of 220 tiles</p>
+        <p>worfless is a basic <a href="https://en.wikipedia.org/wiki/Anagrams_(game)">anagrams-like game</a> using 220 letter tiles</p>
         <p>pull tiles out of a bag and try to form as many 3+ letter words as possible in 60 seconds</p>
         <h4>scoring</h4>
         <p>this uses boggle scoring</p>

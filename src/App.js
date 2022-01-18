@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
-import { FontAwesomeIcon as FA } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import React, { useEffect, useState } from 'react'
 import { GameContext } from './context'
 import { ModalContext } from './context'
 import './App.css'
@@ -14,7 +12,14 @@ function App() {
   const [stats, setStats] = useState({ firstGame: true })
   const [modalOpen, setModalOpen] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const body = document.querySelector('body');
+  const [header, setHeader] = useState(null)
+  const body = document.querySelector('body')
+
+  useEffect(() => {
+    import('./modules/header')
+      .then(({ Header }) => setHeader(<Header />))
+      .catch((err) => console.log(err))
+  }, [])
 
   function startGame() {
     setGameStarted(true)
@@ -26,12 +31,12 @@ function App() {
 
   function openModal() {
     setModalOpen(true)
-    body.style.overflow = 'hidden';
+    body.style.overflow = 'hidden'
   }
 
   function closeModal() {
     setModalOpen(false)
-    body.style.overflow = 'auto';
+    body.style.overflow = 'auto'
   }
 
   function setModal(content) {
@@ -51,11 +56,7 @@ function App() {
         }}
       >
         <div className="App">
-          <header>
-            <p>
-              you are worfless <FA icon={faCoffee} />
-            </p>
-          </header>
+          <header>{header}</header>
           <main>
             <Game />
             <Controls />

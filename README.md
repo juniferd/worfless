@@ -31,9 +31,9 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 # TODOs
 
 - [x] check against scrabble dictionary
-- [ ] swap tiles instead of grabbing 3 and appending
+- [x] swap tiles instead of grabbing 3 and appending
 - [x] monospace font
-- [ ] turn tiles into buttons with `aria-pressed` attr
+- [x] turn tiles into buttons with `aria-pressed` attr
 - [ ] be able to select tiles by clicking
 - [ ] add "shuffle tiles"
 - [x] add modal component
@@ -44,3 +44,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] add more stats in GameContext (e.g., number of games played, score histogram, most recent best word)
 - [ ] add stats to localStorage
 - [ ] keep pruning dictionary/find another source
+- [ ] styling
