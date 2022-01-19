@@ -1,10 +1,12 @@
 .tile {
   font-family: 'Fira Mono', monospace;
+  font-weight: 500;
+  font-size: 1.5em;
   background: #2fdde4;
   color: #333;
   border: 1px solid transparent;
-  padding: 10px;
-  margin: 3px;
+  padding: .25em;
+  margin: 2px;
   position: relative;
 }
 
@@ -15,13 +17,17 @@
   content: '\00D7';
   position: absolute;
   right: 0;
-  top: 0;
+  top: -.35em;
 }
 
 .tile[disabled] {
   cursor: default;
   background: #fff;
   border: 1px solid #ccc;
+}
+
+.tile.found {
+  border-color: #ff6150;
 }
 
 .found::before {
@@ -32,8 +38,8 @@
   top: 0;
   bottom: 0;
   width: 100%;
-  height: 100%;
-  border-right: 1px solid #999;
+  height: 89%;
+  border-right: 1px solid #ff6150;
   transform: rotate(-45deg) translateX(-50%);
 }
 
@@ -42,5 +48,12 @@
   flex-wrap: wrap;
   min-height: 50px;
   justify-content: center;
-  margin: 10px 0;
+  margin: 0.5em 0;
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    max-width: 180px;
+    margin: 0.25em auto;
+  }
 }

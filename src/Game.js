@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from 'react'
-import { Empty, Tile, TileWrapper } from './components'
+import { Empty, Tile } from './components'
 import { GameContext } from './context'
 import {
   findDeletedLetter,
@@ -161,7 +161,7 @@ export default function Game() {
 
   function handleStartSwap() {
     // clear any found tiles
-    const updatedTiles = [...gameTiles].map(t => ({ ...t, found: false }))
+    const updatedTiles = [...gameTiles].map((t) => ({ ...t, found: false }))
     setInputValue('')
     setGameTiles(updatedTiles)
     setSwapMode(true)
@@ -169,25 +169,28 @@ export default function Game() {
 
   function handleCancelSwap() {
     // clear any pressed
-    const updatedTiles = [...gameTiles].map(t => ({...t, pressed: false}))
+    const updatedTiles = [...gameTiles].map((t) => ({ ...t, pressed: false }))
     setGameTiles(updatedTiles)
     setSwapMode(false)
-    textInput.current.focus();
+    textInput.current.focus()
   }
 
   function selectTile(id) {
     const updatedTiles = [...gameTiles]
     if (swapMode) {
       const tile = updatedTiles.find((tile) => tile.id === id)
-      tile.pressed = !tile.pressed;
+      tile.pressed = !tile.pressed
       const numPressed = updatedTiles.reduce((acc, t) => {
         return t.pressed ? acc + 1 : acc
       }, 0)
       if (numPressed === 3) {
         // remove pressed tiles, exit swap mode, grab 3 tiles
-        grabTiles(3, updatedTiles.filter(t => !t.pressed))
+        grabTiles(
+          3,
+          updatedTiles.filter((t) => !t.pressed)
+        )
         setSwapMode(false)
-        textInput.current.focus();
+        textInput.current.focus()
       } else {
         setGameTiles(updatedTiles)
       }
@@ -200,8 +203,8 @@ export default function Game() {
       <section>
         {gameStarted ? (
           <>
-            <TileWrapper>
-              {gameTiles.map(({ id, letter, found, pressed}) => (
+            <Tile.Wrapper>
+              {gameTiles.map(({ id, letter, found, pressed }) => (
                 <Tile
                   key={id}
                   found={found}
@@ -212,7 +215,7 @@ export default function Game() {
                   disabled={!swapMode}
                 />
               ))}
-            </TileWrapper>
+            </Tile.Wrapper>
             {swapMode ? (
               <button onClick={handleCancelSwap} style={{ background: '#333' }}>
                 cancel swap

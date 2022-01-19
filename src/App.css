@@ -24,30 +24,6 @@ input {
   padding: 0.25em;
 }
 
-header {
-  background: #fafafa;
-  color: #fafafa;
-  /*color: #ff6150;*/
-  position: fixed;
-  width: 100%;
-  height: 2.5em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-header > * {
-  padding: 0 .5em;
-  color: #fafafa;
-  transition: color 3s;
-  background: none;
-  border: none;
-}
-header > .color {
-  color: #ff6150;
-}
-header > button.color {
-  color: #aaa;
-}
 main {
   padding-top: 3em;
   padding-bottom: 1em;

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import styles from './Tile.module.css'
 
-export function TileWrapper({ children }) {
+function TileWrapper({ children }) {
   return <div className={styles.wrapper}>{children}</div>
 }
 
@@ -34,5 +34,7 @@ Tile.propTypes = {
   pressed: PropTypes.bool,
   disabled: PropTypes.bool,
 }
+
+Tile.Wrapper = TileWrapper;
 
 export default Tile

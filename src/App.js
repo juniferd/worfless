@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { GameContext } from './context'
 import { ModalContext } from './context'
 import './App.css'
@@ -6,20 +6,14 @@ import Game from './Game'
 import ModalPortal from './ModalPortal'
 import Countdown from './Countdown'
 import Controls from './Controls'
+import {Header} from './modules/header';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false)
   const [stats, setStats] = useState({ firstGame: true })
   const [modalOpen, setModalOpen] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const [header, setHeader] = useState(null)
   const body = document.querySelector('body')
-
-  useEffect(() => {
-    import('./modules/header')
-      .then(({ Header }) => setHeader(<Header />))
-      .catch((err) => console.log(err))
-  }, [])
 
   function startGame() {
     setGameStarted(true)
@@ -56,7 +50,7 @@ function App() {
         }}
       >
         <div className="App">
-          <header>{header}</header>
+          <Header />
           <main>
             <Game />
             <Controls />

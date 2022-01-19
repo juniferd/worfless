@@ -44,4 +44,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] add more stats in GameContext (e.g., number of games played, score histogram, most recent best word)
 - [ ] add stats to localStorage
 - [ ] keep pruning dictionary/find another source
-- [ ] styling
+- [-] styling
+- [ ] whoops should use useReducer for all this context
+- [ ] add tests

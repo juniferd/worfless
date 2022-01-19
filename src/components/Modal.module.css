@@ -30,6 +30,7 @@
   flex-direction: column;
   justify-content: space-between;
   max-width: 500px;
+  max-height: 500px;
 }
 
 .header {
