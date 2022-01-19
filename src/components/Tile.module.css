@@ -6,7 +6,7 @@
   color: #333;
   border: 1px solid transparent;
   padding: .25em;
-  margin: 2px;
+  margin: 3px;
   position: relative;
 }
 
@@ -41,6 +41,7 @@
   height: 89%;
   border-right: 1px solid #ff6150;
   transform: rotate(-45deg) translateX(-50%);
+  user-select: none;
 }
 
 .wrapper {

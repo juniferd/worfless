@@ -1,0 +1,8 @@
+.empty {
+  color: #139094;
+  border: 1px solid #139094;
+  border-radius: 0.5em;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0.5em;
+}

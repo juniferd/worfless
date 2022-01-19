@@ -232,14 +232,17 @@ export default function Game() {
       </section>
       <section>
         {!valid.valid && <p>{valid.message}</p>}
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleOnChange}
-          onKeyUp={handleKeyUp}
-          disabled={!gameStarted}
-          ref={textInput}
-        />
+        {gameStarted && (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleOnChange}
+            onKeyUp={handleKeyUp}
+            disabled={!gameStarted}
+            ref={textInput}
+            placeholder="type to create a word"
+          />
+        )}
       </section>
       <section>
         {!gameStarted
