@@ -9,23 +9,25 @@ import {
   faCrow,
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons'
-import { About } from '../about'
 import { ModalContext } from '../../context'
 import styles from './Header.module.css';
 
 export function Header() {
   const icons = [faCoffee, faBomb, faBookDead, faCat, faMeh, faCrow]
   const [icon, setIcon] = useState(null);
+
   useEffect(() => {
     setIcon(icons[Math.floor(Math.random() * icons.length)])
   }, [])
+
   const {
     setContent: setModalContent,
     openModal,
     closeModal,
   } = useContext(ModalContext)
 
-  function handleModalClick() {
+  async function handleModalClick() {
+    const {About} = await import('../about');
     openModal()
     setModalContent(<About onClose={closeModal} />)
   }
