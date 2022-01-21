@@ -5,7 +5,6 @@ import Game from './Game'
 import ModalPortal from './ModalPortal'
 import Countdown from './Countdown'
 import Controls from './Controls'
-import Stats from './Stats'
 import { Header } from './modules/header'
 
 function App() {
@@ -46,11 +45,11 @@ function App() {
     setRecentGame(recentGame)
     // add to hist
     if (recentGame.score in hist) {
-      const newHist = {...hist}
+      const newHist = { ...hist }
       newHist[recentGame.score] += 1
       setHist(newHist)
     } else {
-      setHist({...hist, [recentGame.score]: 1})
+      setHist({ ...hist, [recentGame.score]: 1 })
     }
     setTotalGameCount(totalGameCount + 1)
   }
@@ -76,11 +75,10 @@ function App() {
               <Game />
               <Controls />
               <Countdown />
-              <Stats />
             </main>
           </div>
+          <ModalPortal>{modalOpen && modalContent}</ModalPortal>
         </StatsContext.Provider>
-        <ModalPortal>{modalOpen && modalContent}</ModalPortal>
       </ModalContext.Provider>
     </GameContext.Provider>
   )

@@ -6,7 +6,8 @@ import React, {
   useRef,
 } from 'react'
 import { Empty, Tile } from './components'
-import { GameContext, StatsContext } from './context'
+import Stats from './Stats'
+import { ModalContext, GameContext, StatsContext } from './context'
 import {
   findDeletedLetter,
   validateAndGetUpdatedGame,
@@ -23,10 +24,11 @@ export default function Game() {
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
   const { started: gameStarted, firstGame } = useContext(GameContext)
-  const {setStats} = useContext(StatsContext)
+  const { setStats } = useContext(StatsContext)
   const textInput = useRef()
   const [dictionary, setDictionary] = useState({})
   const [swapMode, setSwapMode] = useState(false)
+  const { setContent: setModalContent, openModal } = useContext(ModalContext)
 
   const grabTiles = useCallback(
     (n = 10, currTiles = gameTiles) => {
@@ -48,6 +50,8 @@ export default function Game() {
       maxWord,
       foundWords,
     })
+    openModal()
+    setModalContent(<Stats />)
   }, [foundWords])
 
   useEffect(() => {
