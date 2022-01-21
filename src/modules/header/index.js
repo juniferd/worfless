@@ -38,7 +38,7 @@ export function Header() {
         <FA icon={faQuestionCircle} />
       </button>
       <span className={styles.title}>
-        worfless <FA icon={icon} />
+        worfless {icon && <FA icon={icon} />}
       </span>
       <span>
         &nbsp;

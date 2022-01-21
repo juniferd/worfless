@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { GameContext } from './context'
 
 export default function Controls() {
-  const { started, startGame, endGame, stats: { firstGame } } = useContext(GameContext)
+  const { started, startGame, endGame, firstGame } = useContext(GameContext)
 
   function updateGame() {
     if (!started) {

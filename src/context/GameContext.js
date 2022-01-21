@@ -4,7 +4,7 @@ export const GameContext = React.createContext({
   started: false,
   startGame: () => {},
   endGame: () => {},
-  stats: {firstGame: true},
+  firstGame: true,
   setStats: () => {},
 })
 

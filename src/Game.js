@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from 'react'
 import { Empty, Tile } from './components'
-import { GameContext } from './context'
+import { GameContext, StatsContext } from './context'
 import {
   findDeletedLetter,
   validateAndGetUpdatedGame,
@@ -16,15 +16,15 @@ import {
 
 export default function Game() {
   const [gameTiles, setGameTiles] = useState([])
-  const [letters, setLetters] = useState(createShuffledBagOfLetters())
+  const [letters, setLetters] = useState([])
   // TODO revisit this later
   const [counter, setCounter] = useState(0)
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
-  const { started: gameStarted, stats, setStats } = useContext(GameContext)
+  const { started: gameStarted, firstGame } = useContext(GameContext)
+  const {setStats} = useContext(StatsContext)
   const textInput = useRef()
-  const [finalScoreText, setFinalScoreText] = useState([])
   const [dictionary, setDictionary] = useState({})
   const [swapMode, setSwapMode] = useState(false)
 
@@ -42,12 +42,12 @@ export default function Game() {
 
   const getScore = useCallback(() => {
     const { wordCount, points, maxWord } = scoreGame(foundWords)
-    setFinalScoreText([
-      wordCount > 0
-        ? `you got ${wordCount} words for a total of ${points} points. your longest word was ${maxWord}`
-        : "you didn't guess any words! :(",
-      ...foundWords,
-    ])
+    setStats({
+      score: points,
+      wordCount,
+      maxWord,
+      foundWords,
+    })
   }, [foundWords])
 
   useEffect(() => {
@@ -69,16 +69,11 @@ export default function Game() {
 
   useEffect(() => {
     if (gameStarted) {
-      if (stats.firstGame) setStats({ ...stats, firstGame: false })
       grabTiles()
       textInput.current.focus()
     } else {
-      if (!stats.firstGame) getScore()
+      if (!firstGame) getScore()
       resetGame()
-      setStats({
-        ...stats,
-        count: stats.count === undefined ? 0 : stats.count + 1,
-      })
     }
     // TODO look into this pls
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,15 +238,6 @@ export default function Game() {
             placeholder="type to create a word"
           />
         )}
-      </section>
-      <section>
-        {!gameStarted
-          ? finalScoreText.map((text, i) => <p key={i}>{text}</p>)
-          : ''}
-        <p>{foundWords.length > 0 ? 'your words' : ''}</p>
-        {foundWords.map((word, i) => (
-          <p key={i}>{word}</p>
-        ))}
       </section>
     </>
   )

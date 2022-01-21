@@ -47,3 +47,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [-] styling
 - [ ] whoops should use useReducer for all this context
 - [ ] add tests
+- [ ] fix scrolling on iOS (keyboard + focused input will scroll the letters out of view :eyeroll:)
