@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { GameContext } from './context'
+import { Button } from './components'
 
 export default function Controls() {
   const { started, startGame, endGame, firstGame } = useContext(GameContext)
@@ -20,7 +21,7 @@ export default function Controls() {
 
   return (
     <>
-      <button onClick={updateGame}>{getButtonText()}</button>
+      <Button onClick={updateGame}>{getButtonText()}</Button>
     </>
   )
 }

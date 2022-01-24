@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { SVG, Modal } from '../../components'
+import { SVG, Modal, Button } from '../../components'
 import { ReactComponent as Worf } from './worf.svg'
 
 export function About({ onClose }) {
@@ -43,7 +43,7 @@ export function About({ onClose }) {
         </SVG>
       </Modal.Content>
       <Modal.Footer>
-        <button onClick={onClose}>close</button>
+        <Button onClick={onClose}>close</Button>
       </Modal.Footer>
     </Modal>
   )

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Modal } from './components'
+import { Modal, Button } from './components'
 import { ModalContext, GameContext, StatsContext } from './context'
 import styles from './Stats.module.css'
 
@@ -15,7 +15,7 @@ export default function StatsModal() {
   return (
     <Modal onClose={closeModal}>
       <Modal.Header onClose={closeModal}>
-        you&apos;ve played {totalGames} games!
+        you&apos;ve played {totalGames} game{totalGames !== 1 ? 's' : ''}!
       </Modal.Header>
       <Modal.Content>
         <div className={styles.wrapper}>
@@ -29,12 +29,23 @@ export default function StatsModal() {
               your longest word was <strong>{recentGame.maxWord}</strong>
             </p>
           ) : null}
-          {recentGame.wordCount && recentGame.wordCount > 0
-            ? recentGame.foundWords.map((word) => <p key={word}>{word}</p>)
-            : null}
-          <button onClick={handleOnClick}>play again</button>
+          {recentGame.wordCount && recentGame.wordCount > 0 ? (
+            <>
+              <p>your words:</p>
+              <div className={styles.wordsWrapper}>
+              {recentGame.foundWords.map((word) => (
+                <span key={word} className={styles.word}>
+                  {word}
+                </span>
+              ))}
+              </div>
+            </>
+          ) : null}
         </div>
       </Modal.Content>
+      <Modal.Footer>
+        <Button onClick={handleOnClick}>play again</Button>
+      </Modal.Footer>
     </Modal>
   )
 }

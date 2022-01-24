@@ -2,3 +2,21 @@
   margin: 0 auto;
   text-align: center;
 }
+
+.wordsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 8em;
+}
+.word {
+  text-transform: lowercase;
+  background: #139094;
+  color: #fff;
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  user-select: none;
+}

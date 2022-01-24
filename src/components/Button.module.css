@@ -1,0 +1,62 @@
+.button {
+  border: none;
+  background: #1ac0c6;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5em;
+  margin: 0.1em;
+  box-shadow: none;
+}
+
+.primary {
+  background: #1ac0c6;
+}
+
+.secondary {
+  background: #333;
+}
+
+.noBackground {
+  background: none;
+  color: #aaa;
+}
+
+.loading {
+  opacity: 0.75;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation-duration: 0.8s;
+  animation-name: spin;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transition: all .5s;
+}
+
+@keyframes spin {
+  from {
+    transform: rotateZ(0deg);
+    opacity: 1; 
+  }
+
+  25% {
+    transform: rotateZ(90deg);
+  }
+
+  50% {
+    transform: rotateZ(180deg);
+    opacity: 0.5;
+  }
+
+  75% {
+    transform: rotateZ(270deg);
+  }
+
+  to {
+    transform: rotateZ(360deg);
+  }
+}

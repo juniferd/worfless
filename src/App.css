@@ -2,22 +2,8 @@
   text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 section {
   padding: 0.5em;
-}
-
-button {
-  border: none;
-  background: #1ac0c6;
-  color: #fff;
-  cursor: pointer;
-  padding: 0.5em;
-  margin: 0.1em;
-  box-shadow: none;
 }
 
 input {

@@ -30,3 +30,5 @@ export function validateAndGetUpdatedGame(word, gameTiles) {
 
   return {valid: {valid: true, message: ''}, updatedGameTiles};
 }
+
+export const delay = t => new Promise(resolve => setTimeout(resolve, t))

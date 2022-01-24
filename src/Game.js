@@ -4,21 +4,21 @@ import React, {
   useContext,
   useCallback,
   useRef,
+  useReducer,
 } from 'react'
-import { Empty, Tile } from './components'
+import { Empty, Tile, Button } from './components'
 import Stats from './Stats'
 import { ModalContext, GameContext, StatsContext } from './context'
+import { lettersReducer } from './reducers'
 import {
   findDeletedLetter,
   validateAndGetUpdatedGame,
-  createShuffledBagOfLetters,
   scoreGame,
 } from './helpers'
 
 export default function Game() {
   const [gameTiles, setGameTiles] = useState([])
-  const [letters, setLetters] = useState([])
-  // TODO revisit this later
+  const [letters, dispatchLetters] = useReducer(lettersReducer, [])
   const [counter, setCounter] = useState(0)
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
@@ -36,7 +36,7 @@ export default function Game() {
         .slice(0, n)
         .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
       setGameTiles([...currTiles, ...nextTiles])
-      setLetters(letters.slice(n))
+      dispatchLetters({type: 'pull', number: n})
       setCounter(counter + n)
     },
     [counter, gameTiles, letters]
@@ -87,7 +87,7 @@ export default function Game() {
     setSwapMode(false)
     setCounter(0)
     setGameTiles([])
-    setLetters(createShuffledBagOfLetters())
+    dispatchLetters({type: 'reset'})
     setInputValue('')
     setFoundWords([])
   }
@@ -216,13 +216,13 @@ export default function Game() {
               ))}
             </Tile.Wrapper>
             {swapMode ? (
-              <button onClick={handleCancelSwap} style={{ background: '#333' }}>
+              <Button onClick={handleCancelSwap} kind="secondary">
                 cancel swap
-              </button>
+              </Button>
             ) : (
-              <button onClick={handleStartSwap} style={{ background: '#333' }}>
-                swap 3 tiles
-              </button>
+              <Button onClick={handleStartSwap} kind="secondary">
+                swap out 3 tiles
+              </Button>
             )}
           </>
         ) : (
