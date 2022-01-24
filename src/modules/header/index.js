@@ -8,6 +8,7 @@ import {
   faMeh,
   faCrow,
   faQuestionCircle,
+  faChartBar,
 } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '../../components'
 import { ModalContext } from '../../context'
@@ -15,7 +16,8 @@ import styles from './Header.module.css';
 
 export function Header() {
   const icons = [faCoffee, faBomb, faBookDead, faCat, faMeh, faCrow]
-  const [loadingModal, setLoadingModal] = useState(false)
+  const [loadingAboutModal, setLoadingAboutModal] = useState(false)
+  const [loadingStatsModal, setLoadingStatsModal] = useState(false)
   const [icon, setIcon] = useState(null);
 
   useEffect(() => {
@@ -28,25 +30,33 @@ export function Header() {
     closeModal,
   } = useContext(ModalContext)
 
-  async function handleModalClick() {
-    setLoadingModal(true)
+  async function handleAboutModalClick() {
+    setLoadingAboutModal(true)
     const {About} = await import('../about');
-    setLoadingModal(false)
+    setLoadingAboutModal(false)
     openModal()
     setModalContent(<About onClose={closeModal} />)
   }
 
+  async function handleStatsModalClick() {
+    setLoadingStatsModal(true)
+    const {Stats} = await import('../../Stats');
+    setLoadingStatsModal(false)
+    openModal()
+    setModalContent(<Stats />)
+  }
+
   return (
     <header className={styles.header}>
-      <Button onClick={handleModalClick} title="about" kind="noBackground" loading={loadingModal}>
+      <Button onClick={handleAboutModalClick} title="about" kind="noBackground" loading={loadingAboutModal}>
         <FA icon={faQuestionCircle} />
       </Button>
       <span className={styles.title}>
         worfless {icon && <FA icon={icon} />}
       </span>
-      <span>
-        &nbsp;
-      </span>
+      <Button onClick={handleStatsModalClick} title="stats" kind="noBackground" loading={loadingStatsModal}>
+        <FA icon={faChartBar} />
+      </Button>
     </header>
   )
 }

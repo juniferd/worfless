@@ -3,7 +3,7 @@ import { Modal, Button } from './components'
 import { ModalContext, GameContext, StatsContext } from './context'
 import styles from './Stats.module.css'
 
-export default function StatsModal() {
+export function Stats() {
   const { totalGames, recentGame } = useContext(StatsContext)
   const { startGame } = useContext(GameContext)
   const { closeModal } = useContext(ModalContext)
@@ -49,3 +49,5 @@ export default function StatsModal() {
     </Modal>
   )
 }
+
+export default Stats

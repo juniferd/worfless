@@ -20,3 +20,9 @@
   font-weight: 500;
   user-select: none;
 }
+
+@media (max-width: 600px) {
+  .wordsWrapper {
+    margin: 0 2em;
+  }
+}
