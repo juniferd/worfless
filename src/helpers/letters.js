@@ -36,7 +36,7 @@ function createBagOfLetters(letters = LETTER_DISTRIBUTION) {
   return bag
 }
 
-export function shuffleBagOfLetters(bag = []) {
+export function shuffleBag(bag = []) {
   for (let i = 0; i < bag.length; i++) {
     const j = Math.floor(i * Math.random())
     if (j !== i) {
@@ -54,5 +54,5 @@ export default function createShuffledBagOfLetters(
 ) {
   console.log('create shuffled bag')
   const bag = createBagOfLetters(letters)
-  return shuffleBagOfLetters(bag)
+  return shuffleBag(bag)
 }

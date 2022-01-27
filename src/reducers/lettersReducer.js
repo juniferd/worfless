@@ -1,4 +1,4 @@
-import {createShuffledBagOfLetters} from '../helpers'
+import {createShuffledBagOfLetters, shuffleBag} from '../helpers'
 
 export default function reducer(state, action) {
   switch (action.type) {
@@ -7,7 +7,7 @@ export default function reducer(state, action) {
       return [...newLetters]
     }
     case 'pull':
-      return state.slice(action.number)
+      return shuffleBag(state.slice(action.number))
     default:
       return [...state]
   }

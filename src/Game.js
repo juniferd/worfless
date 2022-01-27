@@ -9,7 +9,7 @@ import React, {
 import { Empty, Tile, Button } from './components'
 import Stats from './Stats'
 import { ModalContext, GameContext, StatsContext } from './context'
-import { lettersReducer } from './reducers'
+import { lettersReducer, tilesReducer } from './reducers'
 import {
   findDeletedLetter,
   validateAndGetUpdatedGame,
@@ -17,9 +17,9 @@ import {
 } from './helpers'
 
 export default function Game() {
-  const [gameTiles, setGameTiles] = useState([])
+  const [gameTiles, dispatchTiles] = useReducer(tilesReducer, [])
   const [letters, dispatchLetters] = useReducer(lettersReducer, [])
-  const [counter, setCounter] = useState(0)
+  const [counter, setCounter] = useState(1)
   const [inputValue, setInputValue] = useState('')
   const [foundWords, setFoundWords] = useState([])
   const [valid, setValid] = useState({})
@@ -31,12 +31,14 @@ export default function Game() {
   const { setContent: setModalContent, openModal } = useContext(ModalContext)
 
   const grabTiles = useCallback(
-    (n = 10, currTiles = gameTiles) => {
-      const nextTiles = letters
-        .slice(0, n)
-        .map((letter, i) => ({ id: `${letter}-${i + 1 + counter}`, letter }))
-      setGameTiles([...currTiles, ...nextTiles])
-      dispatchLetters({type: 'pull', number: n})
+    (n = 10, swap = false) => {
+      dispatchLetters({ type: 'pull', number: n })
+      dispatchTiles({
+        type: 'pull',
+        counter,
+        swap,
+        letters: letters.slice(0, n),
+      })
       setCounter(counter + n)
     },
     [counter, gameTiles, letters]
@@ -69,8 +71,7 @@ export default function Game() {
     }, 0)
   }, [dictionary])
 
-  // TODO this seems not great? listens to context and controls game starting/stopping
-
+  // listen to whether the game is started or not
   useEffect(() => {
     if (gameStarted) {
       grabTiles()
@@ -79,21 +80,20 @@ export default function Game() {
       if (!firstGame) getScore()
       resetGame()
     }
-    // TODO look into this pls
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStarted])
 
   function resetGame() {
     setSwapMode(false)
     setCounter(0)
-    setGameTiles([])
-    dispatchLetters({type: 'reset'})
+    dispatchTiles({ type: 'reset' })
+    dispatchLetters({ type: 'reset' })
     setInputValue('')
     setFoundWords([])
   }
 
+  // this only handles delete logic - everything else in keyUp
   function handleOnChange(e) {
-    // handle deleted letter
     if (e.target.value.length < inputValue.length) {
       const deletedLetter = findDeletedLetter(
         e.target.value.toUpperCase(),
@@ -107,7 +107,8 @@ export default function Game() {
       if (updatedGameTiles[index]) {
         updatedGameTiles[index]['found'] = false
       }
-      setGameTiles(updatedGameTiles)
+      // setGameTiles(updatedGameTiles)
+      dispatchTiles({ type: 'update', tiles: updatedGameTiles })
     }
     setInputValue(e.target.value)
   }
@@ -127,7 +128,7 @@ export default function Game() {
       word,
       [...gameTiles]
     )
-    setGameTiles(updatedGameTiles)
+    dispatchTiles({ type: 'update', tiles: updatedGameTiles })
     setValid({ ...validGame })
 
     if (e.keyCode === 13 && validGame.valid) {
@@ -151,7 +152,8 @@ export default function Game() {
         const remainingTiles = updatedGameTiles.filter(({ found }) => !found)
         // TODO maybe don't hardcode this
         const n = remainingTiles.length >= 10 ? 0 : 10 - remainingTiles.length
-        grabTiles(n, remainingTiles)
+        // grabTiles(n, remainingTiles)
+        grabTiles(n)
         setFoundWords([...foundWords, word])
         setInputValue('')
       }
@@ -162,14 +164,14 @@ export default function Game() {
     // clear any found tiles
     const updatedTiles = [...gameTiles].map((t) => ({ ...t, found: false }))
     setInputValue('')
-    setGameTiles(updatedTiles)
+    dispatchTiles({ type: 'update', tiles: updatedTiles })
     setSwapMode(true)
   }
 
   function handleCancelSwap() {
     // clear any pressed
     const updatedTiles = [...gameTiles].map((t) => ({ ...t, pressed: false }))
-    setGameTiles(updatedTiles)
+    dispatchTiles({ type: 'update', tiles: updatedTiles })
     setSwapMode(false)
     textInput.current.focus()
   }
@@ -184,14 +186,11 @@ export default function Game() {
       }, 0)
       if (numPressed === 3) {
         // remove pressed tiles, exit swap mode, grab 3 tiles
-        grabTiles(
-          3,
-          updatedTiles.filter((t) => !t.pressed)
-        )
+        grabTiles(3, true)
         setSwapMode(false)
         textInput.current.focus()
       } else {
-        setGameTiles(updatedTiles)
+        dispatchTiles({ type: 'update', tiles: updatedTiles })
       }
     }
     // TODO selecting tiles by clicking
